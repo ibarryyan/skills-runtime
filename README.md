@@ -33,19 +33,53 @@ Skill Metadata -> Selected Skill
 
 ## 运行
 
-设置环境变量：
+### 1. 准备配置
+
+复制示例配置并填入真实值：
+
+```bash
+cp .env.example .env
+```
+
+`.env` 至少包含：
+
+```bash
+LLM_BASE_URL=https://your-api.example.com/v1
+LLM_API_KEY=your-api-key
+LLM_MODEL=your-model
+```
+
+`.env` 已被 `.gitignore` 忽略，不会被提交；`.env.example` 是模板，可以提交。
+
+### 2. 执行
+
+Python 不会自动读取 `.env`，需要先把变量导出到当前 shell：
+
+```bash
+set -a && source .env && set +a
+python3 main.py
+```
+
+也可以手动导出（不依赖 `.env` 文件）：
 
 ```bash
 export LLM_BASE_URL="https://your-api.example.com/v1"
 export LLM_API_KEY="your-api-key"
 export LLM_MODEL="your-model"
-```
-
-然后：
-
-```bash
 python3 main.py
 ```
+
+两个命令建议分开执行：`set -a && source .env && set +a` 只对当前 shell 生效，需要在同一终端中再运行 `python3 main.py`。
+
+### 3. 常见错误
+
+`LLM Error: Missing environment variables: LLM_BASE_URL, LLM_API_KEY, LLM_MODEL`
+
+说明这三个变量没有进入进程环境，按顺序检查：
+
+1. 是否执行了 `source .env`（直接 `python3 main.py` 不会加载 `.env`）。
+2. `.env` 是否在项目根目录，且键名没有多余空格。
+3. 是否切换过终端或新开了 shell（导出的变量不会跨终端保留）。
 
 ## 内部 HTTPS / 自签名证书
 

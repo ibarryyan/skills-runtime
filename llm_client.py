@@ -25,9 +25,9 @@ class LLMConfig:
 
     @classmethod
     def from_env(cls) -> "LLMConfig":
-        base_url = ""
-        api_key = ""
-        model = ""
+        base_url = os.getenv("LLM_BASE_URL", "").strip()
+        api_key = os.getenv("LLM_API_KEY", "").strip()
+        model = os.getenv("LLM_MODEL", "").strip()
         missing = [
             name
             for name, value in (
